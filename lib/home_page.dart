@@ -22,6 +22,13 @@ class _HomePageState extends State<HomePage> {
         title: const Text('Firebase - Canedo'),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 4, 114, 24),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Log Out',
+            onPressed: _logOut,
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => openAddDialog(context),
@@ -44,7 +51,7 @@ class _HomePageState extends State<HomePage> {
               return Card(
                 elevation: 3,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusGeometry.circular(12),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 margin: const EdgeInsets.symmetric(vertical: 6),
                 child: ListTile(
@@ -53,14 +60,14 @@ class _HomePageState extends State<HomePage> {
                     vertical: 8,
                   ),
                   title: Text(
-                    item['name'],
+                    data['name'],
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   subtitle: Text(
-                    'Quantity ${item['quantity']}',
+                    'Quantity ${data['quantity']}',
                     style: const TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                   trailing: Row(
@@ -68,26 +75,38 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       IconButton(
                         onPressed: () => openEditDialog(context, item),
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.edit,
-                          color: const Color.fromARGB(255, 6, 138, 8),
+                          color: Color.fromARGB(255, 6, 138, 8),
                         ),
                       ),
                       IconButton(
                         onPressed: () => _confirmDelete(context, item.id),
-                        icon: Icon(Icons.delete, color: Colors.red),
+                        icon: const Icon(Icons.delete, color: Colors.red),
                       ),
                     ],
                   ),
                 ),
               );
             },
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             itemCount: docs.length,
           );
         },
       ),
     );
+  }
+
+  // ===== LOG OUT FUNCTION =====
+  void _logOut() async {
+    try {
+      await service.signOut(); // Make sure CrudService has signOut()
+      Navigator.of(context).pushReplacementNamed('/login');
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error logging out: $e')));
+    }
   }
 
   void _confirmDelete(BuildContext context, String id) {
@@ -160,7 +179,7 @@ class _HomePageState extends State<HomePage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromARGB(255, 5, 145, 12),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadiusGeometry.circular(8),
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
             child: const Text('Save'),
@@ -210,7 +229,7 @@ class _HomePageState extends State<HomePage> {
           ),
           ElevatedButton(
             onPressed: () {
-              if (_nameController.text.isNotEmpty &
+              if (_nameController.text.isNotEmpty &&
                   _quantityController.text.isNotEmpty) {
                 service.updateItem(
                   item.id,
@@ -223,7 +242,7 @@ class _HomePageState extends State<HomePage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromARGB(255, 36, 133, 11),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadiusGeometry.circular(8),
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
             child: const Text('Edit'),

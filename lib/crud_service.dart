@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // <-- Add this
 
 class CrudService {
   final CollectionReference items = FirebaseFirestore.instance.collection(
     'items',
   );
+  final FirebaseAuth _auth = FirebaseAuth.instance; // <-- Add this
 
   Future<void> addItems(String name, int quantity) {
     // Create item
@@ -30,5 +32,10 @@ class CrudService {
 
   Future<void> deleteItem(String id) {
     return items.doc(id).delete();
+  }
+
+  // ===== Add this method for logging out =====
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 }
