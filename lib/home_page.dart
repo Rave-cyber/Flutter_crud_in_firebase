@@ -97,10 +97,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // ===== LOG OUT FUNCTION =====
   void _logOut() async {
     try {
-      await service.signOut(); // Make sure CrudService has signOut()
+      await service.signOut();
       Navigator.of(context).pushReplacementNamed('/login');
     } catch (e) {
       ScaffoldMessenger.of(
